@@ -37,7 +37,7 @@ class DatabaseHandler:
         self.cursor.execute('''SELECT * FROM puzzle WHERE is_unique=0 and rows=? and cols=?''', (row, col))
         return self.cursor.fetchall()
 
-    def select_square_data(self, game_id):
+    def select_square_data_by_id(self, game_id):
         game_id = str(game_id)
         self.cursor.execute('''SELECT * FROM puzzle WHERE rows=cols AND id=?''', (game_id,))
         return self.cursor.fetchall()
