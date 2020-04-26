@@ -42,6 +42,26 @@ class DatabaseHandler:
         self.cursor.execute('''SELECT * FROM puzzle WHERE rows=cols AND id=?''', (game_id,))
         return self.cursor.fetchall()
 
+    def select_unique_square_data_by_id(self, game_id):
+        game_id = str(game_id)
+        self.cursor.execute('''SELECT * FROM puzzle WHERE is_unique=1 AND rows=cols AND id=?''', (game_id,))
+        return self.cursor.fetchall()
+
+    # Select unique squares nonograms at easy level - easy level are nomograms with size from 5x5 to 20x20
+    def select_easy_unique_square_data(self):
+        self.cursor.execute('''SELECT * FROM puzzle WHERE is_unique=1 AND rows=cols AND (rows > 4 AND rows < 21)''')
+        return self.cursor.fetchall()
+
+    # Select unique squares nonograms at medium level - easy level are nomograms with size from 21x21 to 40x40
+    def select_medium_unique_square_data(self):
+        self.cursor.execute('''SELECT * FROM puzzle WHERE is_unique=1 AND rows=cols AND (rows > 20 AND rows < 41)''')
+        return self.cursor.fetchall()
+
+    # Select unique squares nonograms at high level - easy level are nomograms with size from 41x41 to 99x99
+    def select_high_unique_square_data(self):
+        self.cursor.execute('''SELECT * FROM puzzle WHERE is_unique=1 AND rows=cols AND (rows > 40 AND rows < 100)''')
+        return self.cursor.fetchall()
+
     def query_sql(self, sql):
         self.cursor.execute(sql)
         return self.cursor.fetchall()
