@@ -1,5 +1,6 @@
 import sqlite3
 import ast
+import numpy as np
 
 
 class DatabaseHandler:
@@ -47,20 +48,39 @@ class DatabaseHandler:
         self.cursor.execute('''SELECT * FROM puzzle WHERE is_unique=1 AND rows=cols AND id=?''', (game_id,))
         return self.cursor.fetchall()
 
-    # Select unique squares nonograms at easy level - easy level are nomograms with size from 5x5 to 20x20
+    '''Select all unioque square nonograms from database'''
+    def select_unique_square_data(self):
+        self.cursor.execute('''SELECT * FROM puzzle WHERE is_unique=1 AND rows=cols''')
+        return self.cursor.fetchall()
+
+    '''Select unique squares nonograms at easy level - easy level are nonograms with size from 5x5 to 20x20'''
     def select_easy_unique_square_data(self):
         self.cursor.execute('''SELECT * FROM puzzle WHERE is_unique=1 AND rows=cols AND (rows > 4 AND rows < 21)''')
         return self.cursor.fetchall()
 
-    # Select unique squares nonograms at medium level - easy level are nomograms with size from 21x21 to 40x40
+    '''Select unique squares nonograms at medium level - easy level are nonograms with size from 21x21 to 40x40'''
     def select_medium_unique_square_data(self):
         self.cursor.execute('''SELECT * FROM puzzle WHERE is_unique=1 AND rows=cols AND (rows > 20 AND rows < 41)''')
         return self.cursor.fetchall()
 
-    # Select unique squares nonograms at high level - easy level are nomograms with size from 41x41 to 99x99
-    def select_high_unique_square_data(self):
+    '''Select unique squares nonograms at hard level - easy level are nonograms with size from 41x41 to 99x99'''
+    def select_hard_unique_square_data(self):
         self.cursor.execute('''SELECT * FROM puzzle WHERE is_unique=1 AND rows=cols AND (rows > 40 AND rows < 100)''')
         return self.cursor.fetchall()
+
+    '''Method returns random 100 unique square nonograms at specific level'''
+    def select_random_100_unique_square_data_by_level(self, level):
+        if level == "easy":
+            data = self.select_easy_unique_square_data()
+        elif level == "medium":
+            data = self.select_medium_unique_square_data()
+        elif level == "hard":
+            data = self.select_hard_unique_square_data()
+        else:
+            data = self.select_unique_square_data()
+
+        np.random.shuffle(data)
+        return data[:100]
 
     def query_sql(self, sql):
         self.cursor.execute(sql)
